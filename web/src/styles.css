@@ -14,6 +14,13 @@
 	--green-bg:#0a1f0a;
 	--green-panel:#0f2415;
 	--green-border:#1a3d1a;
+	
+	/* Yellow theme for auth pages */
+	--yellow-primary:#f59e0b;
+	--yellow-primary-2:#d97706;
+	--yellow-bg:#1f1a0a;
+	--yellow-panel:#2d2415;
+	--yellow-border:#3d3a1a;
 }
 *{box-sizing:border-box}
 html,body,#root{height:100%}
@@ -118,4 +125,15 @@ body{margin:0;background:radial-gradient(1200px 800px at 10% 0%, #101828 0%, #0b
 .example-btn{padding:16px;border:1px solid var(--green-border);background:var(--green-bg);color:var(--text);border-radius:12px;cursor:pointer;text-align:left;transition:all 0.2s}
 .example-btn:hover{background:var(--green-primary-2);color:#0a0f0a;transform:translateY(-2px)}
 .subtitle{color:var(--muted);font-size:14px;margin-top:4px}
+
+/* Auth Pages - Yellow Theme */
+.auth-page{background:radial-gradient(1200px 800px at 50% 0%, var(--yellow-bg) 0%, #0f0a0a 60%) !important}
+.auth-page .auth-card{background:linear-gradient(180deg,var(--yellow-panel),#1f1a0a);border:1px solid var(--yellow-border)}
+.auth-page .auth-form input{border:1px solid var(--yellow-border);background:var(--yellow-bg);color:var(--text)}
+.auth-page .auth-form input:focus{border-color:var(--yellow-primary);outline:none;box-shadow:0 0 0 2px rgba(245,158,11,0.2)}
+.auth-page .upload{background:linear-gradient(180deg,var(--yellow-primary),var(--yellow-primary-2));color:#0f0a0a}
+.auth-page .upload:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(245,158,11,0.3)}
+.auth-page .auth-switch a{color:var(--yellow-primary)}
+.auth-page .auth-switch a:hover{color:var(--yellow-primary-2)}
+.auth-page .error{background:#2a1f0f;border:1px solid #5a3b1b;color:#ffcc80}
 
