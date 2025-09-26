@@ -14,7 +14,7 @@ A comprehensive web application that combines resume parsing and AI research cap
 
 ### 🤖 AI Research Agent
 - **Web search** using DuckDuckGo (no API key needed)
-- **AI analysis** powered by Google Gemini 1.5 Flash
+- **AI analysis** powered by Google Gemini 2.0 Flash
 - **Comprehensive reports** with sources and citations
 - **Markdown export** for research reports
 - **Real-time research** with progress indicators

@@ -5,7 +5,9 @@ from datetime import datetime
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+import json
 import google.generativeai as genai
 import aiohttp
 import urllib.parse
@@ -32,7 +34,8 @@ if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY environment variable is required")
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# Using Gemini 2.0 Flash for better performance and latest capabilities
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 class ResearchRequest(BaseModel):
     question: str
