@@ -93,6 +93,28 @@ import time
 
 rate_limit_storage = defaultdict(list)
 
+# Rate limiting helper function
+def apply_rate_limit(request: Request, max_requests: int, window_seconds: int):
+	"""Apply rate limiting to a request"""
+	client_ip = request.client.host
+	current_time = time.time()
+	
+	# Clean old requests
+	rate_limit_storage[client_ip] = [
+		req_time for req_time in rate_limit_storage[client_ip]
+		if current_time - req_time < window_seconds
+	]
+	
+	# Check rate limit
+	if len(rate_limit_storage[client_ip]) >= max_requests:
+		raise HTTPException(
+			status_code=429,
+			detail=f"Rate limit exceeded. Max {max_requests} requests per {window_seconds} seconds"
+		)
+	
+	# Add current request
+	rate_limit_storage[client_ip].append(current_time)
+
 def rate_limit(max_requests: int = 10, window_seconds: int = 60):
 	"""Rate limiting decorator"""
 	def decorator(func):
@@ -143,9 +165,11 @@ def verify_token(authorization: Optional[str] = Header(None)):
 		decoded = pyjwt.decode(token, JWT_SECRET, algorithms=['HS256'])
 		return decoded
 	except pyjwt.ExpiredSignatureError:
-		raise HTTPException(status_code=401, detail="Token has expired")
+		# Token expired - return None for optional verification
+		return None
 	except pyjwt.InvalidTokenError:
-		raise HTTPException(status_code=401, detail="Invalid token")
+		# Invalid token - return None for optional verification
+		return None
 	except Exception:
 		return None
 
@@ -163,9 +187,11 @@ def verify_csrf_token(x_csrf_token: Optional[str] = Header(None), x_session_id: 
 	return True
 
 @app.get("/csrf-token")
-@rate_limit(max_requests=5, window_seconds=60)  # 5 requests per minute
 async def get_csrf_token(request: Request, x_session_id: Optional[str] = Header(None)):
 	"""Generate and return CSRF token"""
+	# Apply rate limiting (5 requests per minute)
+	apply_rate_limit(request, max_requests=5, window_seconds=60)
+	
 	session_id = x_session_id or "default"
 	token = secrets.token_hex(32)
 	csrf_tokens[session_id] = token
@@ -173,7 +199,6 @@ async def get_csrf_token(request: Request, x_session_id: Optional[str] = Header(
 
 
 @app.post("/parse")
-@rate_limit(max_requests=10, window_seconds=300)  # 10 requests per 5 minutes
 async def parse(
 	request: Request,
 	files: List[UploadFile] = File(...), 
@@ -183,6 +208,9 @@ async def parse(
 	x_csrf_token: Optional[str] = Header(None),
 	x_session_id: Optional[str] = Header(None)
 ):
+	# Apply rate limiting (10 requests per 5 minutes)
+	apply_rate_limit(request, max_requests=10, window_seconds=300)
+	
 	# Verify CSRF token for state-changing operations
 	verify_csrf_token(x_csrf_token, x_session_id)
 	

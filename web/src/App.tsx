@@ -57,12 +57,16 @@ export default function App() {
 			})
 			setRows(res.data.rows || [])
 		} catch (error: any) {
+			console.error('Parse error:', error)
 			if (error.response?.status === 401) {
 				logout() // Token expired, logout user
 			} else if (error.response?.status === 403) {
 				console.error('CSRF token validation failed')
 				// Refresh CSRF token and retry
 				csrfService.clearTokens()
+			} else {
+				// Show error to user
+				alert(`Parse failed: ${error.response?.data?.detail || error.message || 'Unknown error'}`)
 			}
 		} finally {
 			setLoading(false)
