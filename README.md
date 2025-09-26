@@ -157,18 +157,6 @@ python -m spacy download en_core_web_sm
 - **AI Research**: Green theme (`/research`)
 - **Consistent UX**: Same authentication and navigation
 
-## 📝 License
-
-This project is for educational and development purposes.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
 ---
 
 **Built with**: Python, FastAPI, React, TypeScript, Node.js, MongoDB, Google Gemini AI
